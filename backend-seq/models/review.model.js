@@ -14,9 +14,6 @@ module.exports = (sequelize, Sequelize) => {
     ratingReasoning: {
       type: Sequelize.STRING,
     },
-    date: {
-      type: Sequelize.DATEONLY,
-    },
     platform: {
       type: Sequelize.STRING,
     },
@@ -25,6 +22,9 @@ module.exports = (sequelize, Sequelize) => {
     },
     featured: {
       type: Sequelize.TINYINT,
+    },
+    idUser: {
+      type: Sequelize.INTEGER,
     },
   });
 

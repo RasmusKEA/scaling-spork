@@ -1,47 +1,51 @@
 const db = require("../models");
-const Review = db.review;
+const Comment = db.comment;
+const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
   // Validate request
-  if (!req.body.review) {
+  if (!req.body.userComment) {
     res.status(400).send({
       message: "Content can not be empty!",
     });
     return;
   }
 
-  // Create a Review
-  const review = {
+  // Create a Comment
+  const comment = {
     idUser: req.body.idUser,
-    review: req.body.review,
-    title: req.body.title,
-    rating: req.body.rating,
-    ratingReasoning: req.body.ratingReasoning,
-    platform: req.body.platform,
-    image: req.body.image,
+    idReview: req.body.idReview,
+    userComment: req.body.userComment,
   };
 
-  // Save Review in the database
-  Review.create(review)
+  // Save Comment in the database
+  Comment.create(comment)
     .then((data) => {
       res.send(data);
     })
     .catch((err) => {
       res.status(500).send({
         message:
-          err.message || "Some error occurred while creating the Review.",
+          err.message || "Some error occurred while creating the comment.",
       });
     });
 };
 
-exports.findAll = (req, res) => {
-  Review.findAll()
+//Request: http://localhost:3000/api/comment/all?idReview=7
+exports.findAllByReview = (req, res) => {
+  const idReview = req.query.idReview;
+  var condition = idReview
+    ? { idReview: { [Op.like]: `%${idReview}%` } }
+    : null;
+
+  Comment.findAll({ where: condition })
     .then((data) => {
       res.send(data);
     })
     .catch((err) => {
       res.status(500).send({
-        message: err.message || "Some error occurred while retrieving reviews.",
+        message:
+          err.message || "Some error occurred while retrieving comments.",
       });
     });
 };
@@ -49,19 +53,19 @@ exports.findAll = (req, res) => {
 exports.findOne = (req, res) => {
   const id = req.params.id;
 
-  Review.findByPk(id)
+  Comment.findByPk(id)
     .then((data) => {
       if (data) {
         res.send(data);
       } else {
         res.status(404).send({
-          message: `Cannot find Review with id=${id}.`,
+          message: `Cannot find Comment with id=${id}.`,
         });
       }
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Error retrieving Review with id=" + id,
+        message: "Error retrieving Comment with id=" + id,
       });
     });
 };
@@ -69,23 +73,23 @@ exports.findOne = (req, res) => {
 exports.update = (req, res) => {
   const id = req.params.id;
 
-  Review.update(req.body, {
+  Comment.update(req.body, {
     where: { id: id },
   })
     .then((num) => {
       if (num == 1) {
         res.send({
-          message: "Review was updated successfully.",
+          message: "Comment was updated successfully.",
         });
       } else {
         res.send({
-          message: `Cannot update Review with id=${id}. Maybe Review was not found or req.body is empty!`,
+          message: `Cannot update Comment with id=${id}. Maybe Comment was not found or req.body is empty!`,
         });
       }
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Error updating Review with id=" + id,
+        message: "Error updating Comment with id=" + id,
       });
     });
 };
@@ -93,23 +97,23 @@ exports.update = (req, res) => {
 exports.delete = (req, res) => {
   const id = req.params.id;
 
-  Review.destroy({
+  Comment.destroy({
     where: { id: id },
   })
     .then((num) => {
       if (num == 1) {
         res.send({
-          message: "Review was deleted successfully!",
+          message: "Comment was deleted successfully!",
         });
       } else {
         res.send({
-          message: `Cannot delete Review with id=${id}. Maybe Review was not found!`,
+          message: `Cannot delete Comment with id=${id}. Maybe Comment was not found!`,
         });
       }
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Could not delete Review with id=" + id,
+        message: "Could not delete Comment with id=" + id,
       });
     });
 };

@@ -21,6 +21,7 @@ app.get("/", (req, res) => {
 });
 
 const db = require("./models");
+const role = db.role
 
 db.sequelize
   .sync()
@@ -38,3 +39,7 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
 });
+
+
+require('./routes/auth.routes.js')(app);
+require('./routes/user.routes.js')(app);

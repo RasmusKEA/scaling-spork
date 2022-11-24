@@ -16,7 +16,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const db = require("./models");
-const role = db.role
+const role = db.role;
 
 db.sequelize
   .sync()
@@ -29,8 +29,8 @@ db.sequelize
 
 require("./routes/review.routes")(app);
 require("./routes/comment.routes")(app);
-require('./routes/auth.routes.js')(app);
-require('./routes/user.routes.js')(app);
+require("./routes/auth.routes.js")(app);
+require("./routes/user.routes.js")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 3000;

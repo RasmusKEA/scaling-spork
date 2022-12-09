@@ -17,7 +17,9 @@ module.exports = (app) => {
     [authJwt.verifyToken, authJwt.isStaffOrAdmin],
     review.create
   );
+
   router.get("/", review.findAll);
+  router.get("/featured", review.findFeatured);
   router.get("/:id", review.findOne);
   router.put(
     "/:id",

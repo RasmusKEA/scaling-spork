@@ -1,5 +1,6 @@
 const db = require("../models");
 const Review = db.review;
+const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
   // Validate request
@@ -62,6 +63,19 @@ exports.findOne = (req, res) => {
     .catch((err) => {
       res.status(500).send({
         message: "Error retrieving Review with id=" + id,
+      });
+    });
+};
+
+exports.findFeatured = (req, res) => {
+  Review.findAll({ where: { featured: 1 } })
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while retrieving tutorials.",
       });
     });
 };
